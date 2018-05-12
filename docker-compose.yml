@@ -1,0 +1,70 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+
+  mail:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  securella-api:
+    build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/securella-api
+    ports:
+      - "3000:3000"
+    links:
+      - mail
+      - redis
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq -e development -C config/sidekiq.yml
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/securella-api
+    links:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+
+  securella-admin:
+    build:
+      context: ../securella-admin
+    command: npm run start
+    volumes:
+      - ../securella-admin:/securella-admin
+    ports:
+      - "3002:3002"
+
+  securella-partner:
+    build:
+      context: ../securella-partner
+    command: npm run start
+    volumes:
+      - ../securella-partner:/securella-partner
+    ports:
+      - "3003:3003"
+
+  securella-web:
+    build:
+      context: ../securella-web
+    command: npm run start
+    volumes:
+      - ../securella-web:/securella-web
+    ports:
+      - "3001:3001"

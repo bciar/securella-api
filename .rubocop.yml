@@ -1,0 +1,29 @@
+# inherit_from: .rubocop_todo.yml
+AllCops:
+  Exclude:
+    - db/schema.rb
+    - bin/*
+
+Metrics/LineLength:
+  Max: 200
+
+Metrics/MethodLength:
+  Max: 25
+
+Metrics/BlockLength:
+  Max: 32
+
+Metrics/AbcSize:
+  Max: 25
+
+Metrics/ClassLength:
+  Max: 200
+
+Style/Documentation:
+  Enabled: false
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false

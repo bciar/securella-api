@@ -1,0 +1,28 @@
+# this is our development docker-compose building on top of the production docker-compose, just mounting
+# the sync image - not redefining anything else
+
+version: '3'
+services:
+  securella-api:
+    volumes:
+      - securella-api-sync:/app:nocopy # will be mounted on /var/www
+  securella-admin:
+    volumes:
+      - securella-admin-sync:/app:nocopy # will be mounted on /var/www
+  securella-partner:
+    volumes:
+      - securella-partner-sync:/app:nocopy # will be mounted on /var/www
+  securella-web:
+    volumes:
+      - securella-web-sync:/app:nocopy # will be mounted on /var/www
+
+# that the important thing
+volumes:
+  securella-api-sync:
+      external: true
+  securella-admin-sync:
+      external: true
+  securella-partner-sync:
+      external: true
+  securella-web-sync:
+      external: true
